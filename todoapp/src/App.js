@@ -7,24 +7,31 @@ export class App {
     this.todoListModel = new TodoListModel();
   }
   mount() {
+    console.log('mount()が呼ばれたよー');
     const formElement = document.querySelector('#js-form');
     const inputElement = document.querySelector('#js-form-input');
     const containerElement = document.querySelector('#js-todo-list');
     const todoItemCountElement = document.querySelector('#js-todo-count');
 
     this.todoListModel.onChange(() => {
+      console.log('onChange()が呼ばれたよー');
       const todoListElement = element`<ul />`;
       const todoItems = this.todoListModel.getTodoItems();
+      console.log('todoItemsの数は', todoItems.length);
       todoItems.forEach(todoItem => {
         const todoItemElement = todoItem.completed
-          ? element`<li><input type="checkbox" class="checkbox" checked><s>${todoItem.title}</s></input></li>`
-          : element`<li><input type="checkbox" class="checkbox">${todoItem.title}</input></li>`;
+          ? element`<li><input type="checkbox" class="checkbox" checked><s>${todoItem.title}</s><button class="delete">x</button></input></li>`
+          : element`<li><input type="checkbox" class="checkbox">${todoItem.title}<button class="delete">x</button></input></li>`;
         const inputCheckboxElement = todoItemElement.querySelector('.checkbox');
         inputCheckboxElement.addEventListener('change', () => {
           this.todoListModel.updateTodo({
             id: todoItem.id,
             completed: !todoItem.completed
           });
+        });
+        const deleteButtonElement = todoItemElement.querySelector('.delete');
+        deleteButtonElement.addEventListener('click', () => {
+          this.todoListModel.deleteTodo({ id: todoItem.id });
         });
         todoListElement.appendChild(todoItemElement);
       });

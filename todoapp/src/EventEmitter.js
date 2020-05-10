@@ -26,6 +26,7 @@ export class EventEmitter {
   emit(type) {
     // 指定したイベントに対応する Set を取り出し、全てリスナー関数を呼び出す
     const listenerSet = this._listeners.get(type);
+    console.log(type, listenerSet);
     if (!listenerSet) {
       return;
     }
