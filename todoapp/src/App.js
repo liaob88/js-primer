@@ -16,14 +16,23 @@ export class App {
       const todoListElement = element`<ul />`;
       const todoItems = this.todoListModel.getTodoItems();
       todoItems.forEach(todoItem => {
-        const todoItemElement = element`<li>${todoItem.title}</li>`;
+        const todoItemElement = todoItem.completed
+          ? element`<li><input type="checkbox" class="checkbox" checked><s>${todoItem.title}</s></input></li>`
+          : element`<li><input type="checkbox" class="checkbox">${todoItem.title}</input></li>`;
+        const inputCheckboxElement = todoItemElement.querySelector('.checkbox');
+        inputCheckboxElement.addEventListener('change', () => {
+          this.todoListModel.updateTodo({
+            id: todoItem.id,
+            completed: !todoItem.completed
+          });
+        });
         todoListElement.appendChild(todoItemElement);
       });
       render(todoListElement, containerElement);
       todoItemCountElement.textContent = `Todoアイテム数: ${this.todoListModel.getTotalCount()}`;
     });
 
-    formElement.addEventListener('submit', () => {
+    formElement.addEventListener('submit', event => {
       event.preventDefault();
       this.todoListModel.addTodo(
         new TodoItemModel({ title: inputElement.value, completed: false })
