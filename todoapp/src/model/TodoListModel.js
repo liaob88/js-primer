@@ -55,7 +55,7 @@ export class TodoListModel extends EventEmitter {
       return;
     }
 
-    todoItem.completed = completed;
+    todoItem.completed = !completed;
     this.emitChange();
   }
 
